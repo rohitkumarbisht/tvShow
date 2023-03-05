@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { searchAction } from '../Actions'
+import { setData } from '../Actions'
+import { API_URL } from '../config'
 
 const Header = () => {
   const dispatch = useDispatch()
-  const calibration = useSelector((state) => state)
-  console.log('cali', calibration)
   const searchData = async (e, query) => {
     e.preventDefault()
-    const response = await searchAction(query, dispatch)
-    console.log('Response', response)
+    let data = await fetch(API_URL + '/search/shows?q=' + query)
+    const jsonData = await data.json()
+    console.log(jsonData)
+    dispatch(setData(jsonData))
   }
   const [query, setQuery] = useState('')
   return (

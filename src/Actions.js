@@ -1,21 +1,35 @@
-import axios from 'axios'
-import { API_URL } from './config'
-import { SEARCH_DATA } from './Constants'
+import { combineReducers, createStore } from 'redux'
 
-export const searchAction = async (query) => {
-  try {
-    return await axios
-      .get(API_URL + '/search/shows?q=' + query, {})
-      .then((response) => {
-        setData(response)
-        return response
-      })
-  } catch (error) {}
-}
+//action creator
 
-export const setData = (response) => {
+export const setData = (jsonData) => {
   return {
-    type: SEARCH_DATA,
-    payload: response,
+    type: 'SEARCH_DATA',
+    payload: jsonData,
   }
 }
+
+//reducers
+const movieData = (
+  movieDataList = {
+    data: '',
+  },
+  action
+) => {
+  if (action.type === 'SEARCH_DATA') {
+    return { data: action.payload }
+  } else {
+    return 'movieDataList'
+  }
+}
+
+//Redux Store
+const dataStore = combineReducers({
+  movieData: movieData,
+})
+
+export const store = createStore(dataStore)
+
+const action = setData()
+store.dispatch(action)
+console.log(store.getState())
